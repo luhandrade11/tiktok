@@ -11,7 +11,7 @@
             --success-green: #10b981;
             --text-dark: #1a1a1a;
             --text-gray: #6b7280;
-            --bg-body: #f7fafc; /* Fundo agora é branco para preencher tudo */
+            --bg-body: #f7fafc; 
             --bg-qr: #f4f6f9;
             --border-light: #e5e7eb;
         }
@@ -31,15 +31,14 @@
         .checkout-container {
             background-color: #ffffff;
             width: 100%;
-            min-height: 100vh; /* Faz o container ter no mínimo a altura da tela */
+            min-height: 100vh;
             position: relative;
             display: flex;
             flex-direction: column;
         }
 
-        /* Overlay de Loading */
         #loading {
-            position: fixed; /* Fixed para cobrir a tela inteira */
+            position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.95);
             display: flex;
@@ -77,8 +76,8 @@
 
         .content {
             padding: 30px 20px;
-            max-width: 600px; /* Limite opcional para não esticar demais em monitores UltraWide */
-            margin: 0 auto;  /* Centraliza o conteúdo interno */
+            max-width: 600px;
+            margin: 0 auto;
             width: 100%;
         }
 
@@ -98,25 +97,28 @@
             margin-bottom: 25px;
         }
 
+        /* --- ALTERAÇÃO SOLICITADA AQUI --- */
         .qr-code-box {
             background-color: var(--bg-qr);
-            padding: 30px;
+            width: 182px;          /* Largura fixa de 182px */
+            height: 182px;         /* Altura fixa de 182px */
             border-radius: 16px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 25px;
+            margin: 0 auto 25px auto; /* Centraliza horizontalmente */
         }
 
         .qr-code-box img {
-            width: 150px;
-            height: 150px;
+            width: 160px;          /* Ajustado para caber dentro dos 182px */
+            height: 160px;
             border-radius: 8px;
             background-color: #fff;
-            padding: 10px;
+            padding: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             display: none;
         }
+        /* --------------------------------- */
 
         .value-row {
             display: flex;
