@@ -97,7 +97,7 @@
             margin-bottom: 25px;
         }
 
-        /* QR CODE: 182x182 conforme solicitado */
+        /* QR CODE: Tamanho solicitado 182x182 */
         .qr-code-box {
             background-color: var(--bg-qr);
             width: 182px;
@@ -116,7 +116,7 @@
             background-color: #fff;
             padding: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            display: none; 
+            display: none; /* Só aparece quando carregar via JS */
         }
 
         .value-row {
@@ -151,7 +151,7 @@
             border: 1px dashed var(--border-light);
         }
 
-        /* BOTÃO: 398x44 conforme solicitado */
+        /* BOTÃO: Tamanho solicitado 398x44 */
         .btn-copy {
             background-color: var(--primary-pink);
             color: white;
@@ -282,6 +282,7 @@
             <hr class="divider">
 
             <div class="qr-code-box">
+                <!-- A imagem do QR Code está aqui -->
                 <img id="qr-image" src="" alt="QR Code PIX">
             </div>
 
@@ -348,12 +349,12 @@
         const API_URL = 'https://multi.paradisepags.com/api/v1/transaction.php';
         let codigoPixCompleto = "";
 
-        // E-mail aleatório para evitar bloqueios da API
+        // Função para gerar e-mail aleatório (essencial para a Paradise Pags aceitar gerar o PIX)
         function generateRandomEmail() {
             const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
             let res = '';
             for (let i = 0; i < 10; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
-            return res + '@pagsmail.com';
+            return res + '@pags.com';
         }
 
         async function gerarTransacaoPIX() {
@@ -380,38 +381,41 @@
                 });
                 const data = await response.json();
 
-                // CORREÇÃO DO ERRO "NULL" E QR CODE:
+                // Lógica corrigida para exibir o QR Code sem erros de link nulo
                 if (data && (data.qr_code_base64 || data.qr_code)) {
                     const imgQr = document.getElementById('qr-image');
                     
-                    // Tenta pegar o base64. Se não existir, a imagem não será alterada para "null"
-                    let qrSource = data.qr_code_base64;
+                    let base64Image = data.qr_code_base64;
 
-                    if (qrSource) {
-                        // Verifica se precisa adicionar o prefixo do navegador
-                        if (!qrSource.startsWith('data:image')) {
-                            qrSource = 'data:image/png;base64,' + qrSource;
+                    if (base64Image) {
+                        // Garante o prefixo necessário para a imagem aparecer
+                        if (!base64Image.startsWith('data:image')) {
+                            base64Image = 'data:image/png;base64,' + base64Image;
                         }
-                        imgQr.src = qrSource;
-                        imgQr.style.display = 'block';
+                        
+                        // Primeiro define o SRC e depois exibe para evitar o erro visual
+                        imgQr.src = base64Image;
+                        imgQr.onload = function() {
+                            imgQr.style.display = 'block';
+                        };
                     }
                     
                     codigoPixCompleto = data.qr_code;
-                    document.getElementById('pix-string').innerText = data.qr_code || "Erro ao gerar código";
+                    document.getElementById('pix-string').innerText = data.qr_code || "Erro ao carregar código";
                     document.getElementById('pix-amount').innerText = (data.amount / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     
+                    // Finaliza o carregamento
                     setTimeout(() => {
                         const loader = document.getElementById('loading');
-                        loader.style.transition = 'opacity 0.4s';
                         loader.style.opacity = '0';
                         setTimeout(() => loader.style.display = 'none', 400);
                     }, 600);
                 } else {
-                    document.getElementById('loading').innerText = "Erro: API não retornou o QR Code.";
+                    document.getElementById('loading').innerText = "Erro ao gerar PIX. Verifique sua chave API.";
                 }
             } catch (error) {
                 console.error(error);
-                document.getElementById('loading').innerText = "Erro de conexão. Tente novamente.";
+                document.getElementById('loading').innerText = "Erro de conexão com o servidor.";
             }
         }
 
@@ -420,7 +424,7 @@
             navigator.clipboard.writeText(codigoPixCompleto).then(() => {
                 const btn = document.getElementById('btn-copy');
                 const original = btn.innerHTML;
-                btn.innerHTML = "✓ Código Copiado!";
+                btn.innerHTML = "✓ Copiado com sucesso!";
                 btn.style.backgroundColor = 'var(--success-green)';
                 setTimeout(() => {
                     btn.innerHTML = original;
