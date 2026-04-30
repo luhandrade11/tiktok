@@ -11,7 +11,7 @@
             --success-green: #10b981;
             --text-dark: #1a1a1a;
             --text-gray: #6b7280;
-            --bg-body: #f7fafc; 
+            --bg-body: #f7fafc;
             --bg-qr: #f4f6f9;
             --border-light: #e5e7eb;
         }
@@ -72,6 +72,12 @@
             font-size: 14px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        .banner svg {
+            vertical-align: middle;
+            margin-right: 8px;
         }
 
         .content {
@@ -267,6 +273,111 @@
             font-size: 14px;
             color: #6b7280;
         }
+
+        #status-message svg {
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        /* TELA DE PAGAMENTO APROVADO */
+        #approved-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .approved-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background-color: #ecfdf5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.4s ease forwards;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .approved-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--success-green);
+            stroke-width: 3;
+            fill: none;
+        }
+
+        .approved-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .approved-subtitle {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .approved-btn {
+            background-color: var(--success-green);
+            color: white;
+            border: none;
+            width: 100%;
+            max-width: 300px;
+            height: 48px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .approved-btn:hover {
+            background-color: #059669;
+        }
+
+        .approved-details {
+            background-color: #f9fafb;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .approved-details .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+
+        .approved-details .detail-row span:last-child {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
     </style>
 </head>
 <body>
@@ -278,11 +389,12 @@
             Gerando seu pagamento...
         </div>
 
-        <div class="banner">
+        <div class="banner" id="top-banner">
             Pagamento 100% Seguro
         </div>
 
-        <div class="content">
+        <!-- Tela do QR Code -->
+        <div class="content" id="pix-content">
             <h2 class="title">Escaneie o QR-code ou copie o código.</h2>
             <hr class="divider">
 
@@ -305,7 +417,6 @@
                 Copiar Código Pix
             </button>
 
-            <!-- Mensagem de status do pagamento -->
             <div id="status-message"></div>
 
             <h3 class="instructions-title">Como pagar:</h3>
@@ -345,6 +456,40 @@
             </div>
         </div>
 
+        <!-- Tela de Pagamento Aprovado (oculta inicialmente) -->
+        <div id="approved-screen">
+            <div class="approved-icon">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h2 class="approved-title">Pagamento Aprovado</h2>
+            <p class="approved-subtitle">Seu pagamento foi confirmado com sucesso. Você será redirecionado em instantes...</p>
+            
+            <div class="approved-details">
+                <div class="detail-row">
+                    <span>Valor pago:</span>
+                    <span id="approved-amount">R$ 0,00</span>
+                </div>
+                <div class="detail-row">
+                    <span>ID da transação:</span>
+                    <span id="approved-transaction-id">---</span>
+                </div>
+                <div class="detail-row">
+                    <span>Status:</span>
+                    <span id="approved-status">Aprovado</span>
+                </div>
+            </div>
+
+            <button class="approved-btn" onclick="window.location.href='obrigado.html'">
+                Ir para página de confirmação
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+        </div>
+
         <div class="footer-terms">
             <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
             <p>Seu pagamento está seguro. Ao continuar você concorda com nossas políticas.</p>
@@ -359,7 +504,12 @@
         let transactionId = null;
         let pollingInterval = null;
         let tentativas = 0;
-        const MAX_TENTATIVAS = 60; // 5 minutos (5s * 60)
+        const MAX_TENTATIVAS = 60;
+        let valorPago = 0;
+
+        // Ícones SVG para substituir emojis
+        const iconCheck = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        const iconX = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
         function generateRandomEmail() {
             const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -380,10 +530,10 @@
             const randomEmail = generateRandomEmail();
 
             const transactionData = {
-                "amount": 100, 
+                "amount": 100,
                 "description": "Pagamento Checkout",
-                "reference": "REF-" + Date.now(), 
-                "source": "api_externa", 
+                "reference": "REF-" + Date.now(),
+                "source": "api_externa",
                 "customer": {
                     "name": "Cliente Comprador",
                     "email": randomEmail,
@@ -411,10 +561,10 @@
 
                 transactionId = data.transaction_id;
                 codigoPixCompleto = data.qr_code;
+                valorPago = data.amount;
                 pixStringEl.innerText = codigoPixCompleto || "Código não disponível";
                 pixAmountEl.innerText = (data.amount / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-                // Exibe QR Code
                 let base64Image = data.qr_code_base64;
                 if (!base64Image && data.qr_code) {
                     base64Image = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(data.qr_code)}`;
@@ -423,10 +573,6 @@
                     imgQr.onerror = () => {
                         imgQr.alt = 'Não foi possível carregar o QR Code';
                         imgQr.style.display = 'block';
-                        imgQr.style.width = '160px';
-                        imgQr.style.height = '160px';
-                        imgQr.style.backgroundColor = '#ffebee';
-                        imgQr.style.borderRadius = '8px';
                     };
                 } else if (base64Image) {
                     if (!base64Image.startsWith('data:image')) {
@@ -437,28 +583,20 @@
                     imgQr.onerror = () => {
                         if (data.qr_code) {
                             imgQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(data.qr_code)}`;
-                            imgQr.onerror = () => { imgQr.alt = 'QR Code não disponível'; };
-                        } else {
-                            imgQr.alt = 'QR Code não disponível';
                         }
                     };
                 } else {
                     throw new Error('Resposta da API não contém qr_code ou qr_code_base64');
                 }
 
-                // Esconde o loading instantaneamente
                 loadingEl.style.display = 'none';
-
-                // Inicia o polling para verificar pagamento
                 statusMsg.innerText = 'Aguardando confirmação do pagamento...';
                 iniciarPolling();
 
             } catch (error) {
                 console.error(error);
-                loadingEl.innerHTML = `Erro: ${error.message}<br><small>Verifique a chave API ou sua conexão.</small>`;
+                loadingEl.innerHTML = `${iconX} Erro: ${error.message}<br><small>Verifique a chave API ou sua conexão.</small>`;
                 loadingEl.style.color = '#f9005b';
-                loadingEl.style.opacity = '1';
-                loadingEl.style.display = 'flex';
             }
         }
 
@@ -481,18 +619,33 @@
 
                 if (data.status === 'approved') {
                     pararPolling();
-                    document.getElementById('status-message').innerHTML = '✅ Pagamento aprovado! Redirecionando...';
-                    setTimeout(() => {
-                        window.location.href = 'obrigado.html'; // Altere para sua página de obrigado
-                    }, 1000);
+                    mostrarTelaAprovado();
                 } else if (data.status === 'failed' || data.status === 'refunded' || data.status === 'chargeback') {
                     pararPolling();
-                    document.getElementById('status-message').innerHTML = '❌ Pagamento não aprovado.';
+                    document.getElementById('status-message').innerHTML = `${iconX} Pagamento não aprovado.`;
                 }
 
             } catch (error) {
                 console.error('Erro na verificação:', error);
             }
+        }
+
+        function mostrarTelaAprovado() {
+            document.getElementById('pix-content').style.display = 'none';
+            document.getElementById('approved-screen').style.display = 'block';
+            
+            const banner = document.getElementById('top-banner');
+            banner.innerHTML = `${iconCheck} Pagamento Aprovado`;
+            banner.style.backgroundColor = 'var(--success-green)';
+            
+            document.getElementById('approved-amount').innerText = (valorPago / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('approved-transaction-id').innerText = '#' + transactionId;
+            document.getElementById('approved-status').innerHTML = `${iconCheck} Aprovado`;
+            document.getElementById('approved-status').style.color = 'var(--success-green)';
+            
+            setTimeout(() => {
+                window.location.href = 'obrigado.html';
+            }, 4000);
         }
 
         function iniciarPolling() {
