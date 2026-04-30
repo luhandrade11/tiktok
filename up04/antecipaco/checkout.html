@@ -40,7 +40,7 @@
         #loading {
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -49,6 +49,7 @@
             color: var(--primary-pink);
             font-weight: 600;
             font-size: 16px;
+            transition: opacity 0.4s ease;
         }
 
         .spinner {
@@ -97,7 +98,7 @@
             margin-bottom: 25px;
         }
 
-        /* QR CODE: Tamanho solicitado 182x182 */
+        /* QR CODE: 182x182 garantido */
         .qr-code-box {
             background-color: var(--bg-qr);
             width: 182px;
@@ -107,16 +108,19 @@
             justify-content: center;
             align-items: center;
             margin: 0 auto 25px auto;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
         }
 
-        .qr-code-box img {
+        #qr-image {
             width: 160px;
             height: 160px;
             border-radius: 8px;
             background-color: #fff;
             padding: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            display: none; /* Só aparece quando carregar via JS */
+            opacity: 0; /* Começa invisível mas ocupa espaço */
+            transition: opacity 0.3s ease;
         }
 
         .value-row {
@@ -149,9 +153,10 @@
             padding: 12px;
             border-radius: 8px;
             border: 1px dashed var(--border-light);
+            text-align: center;
         }
 
-        /* BOTÃO: Tamanho solicitado 398x44 */
+        /* BOTÃO: 398x44 garantido */
         .btn-copy {
             background-color: var(--primary-pink);
             color: white;
@@ -169,25 +174,11 @@
             gap: 10px;
             transition: transform 0.1s, background-color 0.2s;
             margin: 0 auto 35px auto;
-            padding: 0;
         }
 
         .btn-copy:active { transform: scale(0.98); }
 
-        .btn-copy svg {
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-        }
-
-        .instructions-title {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--text-dark);
-        }
+        .btn-copy svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
 
         .instruction-step {
             display: flex;
@@ -221,13 +212,6 @@
             margin-top: 40px;
         }
 
-        .security-box p {
-            font-size: 13px;
-            color: #4b5563;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
         .security-item {
             display: flex;
             align-items: center;
@@ -250,96 +234,70 @@
             padding: 40px 20px;
             font-size: 12px;
             color: #8b92a1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
             background-color: #ffffff;
-        }
-
-        .footer-terms svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--success-green);
         }
     </style>
 </head>
 <body>
 
-    <div class="checkout-container">
-        
-        <div id="loading">
-            <div class="spinner"></div>
-            Gerando seu pagamento...
-        </div>
+    <div id="loading">
+        <div class="spinner"></div>
+        Gerando seu pagamento...
+    </div>
 
-        <div class="banner">
-            Pagamento 100% Seguro
-        </div>
+    <div class="checkout-container">
+        <div class="banner">Pagamento 100% Seguro</div>
 
         <div class="content">
             <h2 class="title">Escaneie o QR-code ou copie o código.</h2>
             <hr class="divider">
 
             <div class="qr-code-box">
-                <!-- A imagem do QR Code está aqui -->
                 <img id="qr-image" src="" alt="QR Code PIX">
             </div>
 
             <div class="value-row">
                 <span class="value-label">Valor PIX:</span>
-                <span class="value-amount" id="pix-amount">R$ 0,00</span>
+                <span class="value-amount" id="pix-amount">R$ 27,85</span>
             </div>
 
-            <div class="pix-string" id="pix-string">Gerando código...</div>
+            <div class="pix-string" id="pix-string">Carregando código...</div>
 
             <button class="btn-copy" id="btn-copy" onclick="copiarPix()">
-                <svg viewBox="0 0 24 24">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
+                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copiar Código Pix
             </button>
 
-            <h3 class="instructions-title">Como pagar:</h3>
-            
             <div class="instruction-step">
                 <div class="step-number">1</div>
                 <div>Abra o aplicativo do seu banco de preferência.</div>
             </div>
             <div class="instruction-step">
                 <div class="step-number">2</div>
-                <div>Escolha a opção de pagar via <strong>Pix</strong> e selecione "QR Code" ou "Copia e Cola".</div>
+                <div>Escolha pagar via <strong>Pix</strong> e selecione "QR Code" ou "Copia e Cola".</div>
             </div>
             <div class="instruction-step">
                 <div class="step-number">3</div>
-                <div>Confirme os dados da transação e o valor.</div>
+                <div>Confirme os dados e o valor de <strong>R$ 27,85</strong>.</div>
             </div>
             <div class="instruction-step">
                 <div class="step-number">4</div>
-                <div>Pronto! Seu acesso será liberado assim que o pagamento for confirmado.</div>
+                <div>A liberação ocorre assim que o pagamento for confirmado.</div>
             </div>
 
             <div class="security-box">
-                <p>Sua segurança é nossa prioridade. Utilizamos criptografia de ponta a ponta para proteger seus dados:</p>
-                
                 <div class="security-item">
                     <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    Processamento imediato;
+                    Processamento imediato e seguro;
                 </div>
                 <div class="security-item">
                     <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    Garantia de proteção ao consumidor;
-                </div>
-                <div class="security-item">
-                    <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    Ambiente criptografado SSL.
+                    Ambiente protegido por criptografia SSL.
                 </div>
             </div>
         </div>
 
         <div class="footer-terms">
-            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
             <p>Seu pagamento está seguro. Ao continuar você concorda com nossas políticas.</p>
         </div>
     </div>
@@ -349,25 +307,19 @@
         const API_URL = 'https://multi.paradisepags.com/api/v1/transaction.php';
         let codigoPixCompleto = "";
 
-        // Função para gerar e-mail aleatório (essencial para a Paradise Pags aceitar gerar o PIX)
         function generateRandomEmail() {
-            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            let res = '';
-            for (let i = 0; i < 10; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
-            return res + '@pags.com';
+            return Math.random().toString(36).substring(2, 12) + '@checkout-seguro.com';
         }
 
         async function gerarTransacaoPIX() {
-            const randomEmail = generateRandomEmail();
-
             const transactionData = {
                 "amount": 2785, 
-                "description": "Pagamento Checkout",
-                "reference": "REF-" + Date.now(), 
+                "description": "Acesso Digital",
+                "reference": "PED-" + Date.now(), 
                 "source": "api_externa", 
                 "customer": {
-                    "name": "Cliente Comprador",
-                    "email": randomEmail,
+                    "name": "Cliente VIP",
+                    "email": generateRandomEmail(),
                     "phone": "11999999999",
                     "document": "05531510101"
                 }
@@ -379,43 +331,33 @@
                     headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' },
                     body: JSON.stringify(transactionData)
                 });
+                
                 const data = await response.json();
 
-                // Lógica corrigida para exibir o QR Code sem erros de link nulo
                 if (data && (data.qr_code_base64 || data.qr_code)) {
                     const imgQr = document.getElementById('qr-image');
-                    
-                    let base64Image = data.qr_code_base64;
+                    let base64 = data.qr_code_base64;
 
-                    if (base64Image) {
-                        // Garante o prefixo necessário para a imagem aparecer
-                        if (!base64Image.startsWith('data:image')) {
-                            base64Image = 'data:image/png;base64,' + base64Image;
-                        }
-                        
-                        // Primeiro define o SRC e depois exibe para evitar o erro visual
-                        imgQr.src = base64Image;
-                        imgQr.onload = function() {
-                            imgQr.style.display = 'block';
-                        };
+                    // Força o prefixo se não existir
+                    if (base64 && !base64.startsWith('data:image')) {
+                        base64 = 'data:image/png;base64,' + base64;
                     }
+
+                    imgQr.src = base64;
+                    imgQr.style.opacity = '1'; // Torna visível imediatamente após carregar o src
                     
                     codigoPixCompleto = data.qr_code;
-                    document.getElementById('pix-string').innerText = data.qr_code || "Erro ao carregar código";
-                    document.getElementById('pix-amount').innerText = (data.amount / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    document.getElementById('pix-string').innerText = data.qr_code;
                     
-                    // Finaliza o carregamento
-                    setTimeout(() => {
-                        const loader = document.getElementById('loading');
-                        loader.style.opacity = '0';
-                        setTimeout(() => loader.style.display = 'none', 400);
-                    }, 600);
+                    // Remove o loading suavemente
+                    const loader = document.getElementById('loading');
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 400);
                 } else {
-                    document.getElementById('loading').innerText = "Erro ao gerar PIX. Verifique sua chave API.";
+                    document.getElementById('loading').innerText = "Erro ao processar. Tente novamente.";
                 }
             } catch (error) {
-                console.error(error);
-                document.getElementById('loading').innerText = "Erro de conexão com o servidor.";
+                document.getElementById('loading').innerText = "Erro de conexão.";
             }
         }
 
@@ -423,16 +365,17 @@
             if(!codigoPixCompleto) return;
             navigator.clipboard.writeText(codigoPixCompleto).then(() => {
                 const btn = document.getElementById('btn-copy');
-                const original = btn.innerHTML;
-                btn.innerHTML = "✓ Copiado com sucesso!";
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "✓ Código Copiado!";
                 btn.style.backgroundColor = 'var(--success-green)';
                 setTimeout(() => {
-                    btn.innerHTML = original;
+                    btn.innerHTML = originalText;
                     btn.style.backgroundColor = 'var(--primary-pink)';
-                }, 2500);
+                }, 2000);
             });
         }
 
+        // Inicia a geração assim que a página carrega
         window.onload = gerarTransacaoPIX;
     </script>
 </body>
