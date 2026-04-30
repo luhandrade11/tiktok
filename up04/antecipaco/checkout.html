@@ -97,7 +97,7 @@
             margin-bottom: 25px;
         }
 
-        /* QR CODE: Exatamente 182x182 */
+        /* QR CODE: 182x182 conforme solicitado */
         .qr-code-box {
             background-color: var(--bg-qr);
             width: 182px;
@@ -151,7 +151,7 @@
             border: 1px dashed var(--border-light);
         }
 
-        /* BOTÃO: Exatamente 398x44 */
+        /* BOTÃO: 398x44 conforme solicitado */
         .btn-copy {
             background-color: var(--primary-pink);
             color: white;
@@ -348,12 +348,12 @@
         const API_URL = 'https://multi.paradisepags.com/api/v1/transaction.php';
         let codigoPixCompleto = "";
 
-        // Função para gerar e-mail aleatório (evita erro de repetição da API)
+        // E-mail aleatório para evitar bloqueios da API
         function generateRandomEmail() {
             const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
             let res = '';
             for (let i = 0; i < 10; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
-            return res + '@pagomail.com';
+            return res + '@pagsmail.com';
         }
 
         async function gerarTransacaoPIX() {
@@ -380,23 +380,26 @@
                 });
                 const data = await response.json();
 
-                if (data.status === 'success' || data.qr_code_base64) {
+                // CORREÇÃO DO ERRO "NULL" E QR CODE:
+                if (data && (data.qr_code_base64 || data.qr_code)) {
                     const imgQr = document.getElementById('qr-image');
                     
-                    // Garante que o prefixo Base64 esteja presente para renderizar a imagem
+                    // Tenta pegar o base64. Se não existir, a imagem não será alterada para "null"
                     let qrSource = data.qr_code_base64;
-                    if (qrSource && !qrSource.startsWith('data:image')) {
-                        qrSource = 'data:image/png;base64,' + qrSource;
-                    }
 
-                    imgQr.src = qrSource;
-                    imgQr.style.display = 'block';
+                    if (qrSource) {
+                        // Verifica se precisa adicionar o prefixo do navegador
+                        if (!qrSource.startsWith('data:image')) {
+                            qrSource = 'data:image/png;base64,' + qrSource;
+                        }
+                        imgQr.src = qrSource;
+                        imgQr.style.display = 'block';
+                    }
                     
                     codigoPixCompleto = data.qr_code;
-                    document.getElementById('pix-string').innerText = data.qr_code;
+                    document.getElementById('pix-string').innerText = data.qr_code || "Erro ao gerar código";
                     document.getElementById('pix-amount').innerText = (data.amount / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     
-                    // Oculta o loader
                     setTimeout(() => {
                         const loader = document.getElementById('loading');
                         loader.style.transition = 'opacity 0.4s';
@@ -404,11 +407,11 @@
                         setTimeout(() => loader.style.display = 'none', 400);
                     }, 600);
                 } else {
-                    document.getElementById('loading').innerText = "Erro ao processar resposta da API.";
+                    document.getElementById('loading').innerText = "Erro: API não retornou o QR Code.";
                 }
             } catch (error) {
                 console.error(error);
-                document.getElementById('loading').innerText = "Erro na conexão com o servidor.";
+                document.getElementById('loading').innerText = "Erro de conexão. Tente novamente.";
             }
         }
 
@@ -417,7 +420,7 @@
             navigator.clipboard.writeText(codigoPixCompleto).then(() => {
                 const btn = document.getElementById('btn-copy');
                 const original = btn.innerHTML;
-                btn.innerHTML = "✓ Copiado!";
+                btn.innerHTML = "✓ Código Copiado!";
                 btn.style.backgroundColor = 'var(--success-green)';
                 setTimeout(() => {
                     btn.innerHTML = original;
