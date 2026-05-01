@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             background-color: #ffffff; /* Fundo Branco */
-            color: #000000; /* Texto Preto */
+            color: #1f2937; /* Cinza bem escuro, mais suave que preto puro */
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -26,38 +26,37 @@
             align-items: center;
         }
 
-        /* Animação do spinner com as cores do TikTok como gradiente interligado */
+        /* Animação do spinner com visual moderno e neutro (Tons de Azul) */
         .spinner {
-            position: relative; /* Necessário para o elemento de máscara */
+            position: relative; 
             width: 70px;
             height: 70px;
             border-radius: 50%;
-            /* Base color fallback */
-            background-color: #69C9D0;
-            /* Gradiente cônico interligando as cores */
+            background-color: #3b82f6; /* Cor base fallback */
+            /* Gradiente cônico suave */
             background: conic-gradient(
                 from 0deg,
-                #69C9D0 0deg,   /* Ciano TikTok (Top) */
-                #EE1D52 90deg,  /* Rosa/Vermelho TikTok (Right) */
-                #010101 180deg, /* Preto TikTok (Bottom) */
-                #69C9D0 360deg  /* Volta ao Ciano */
+                #4f46e5 0deg,   /* Azul Indigo */
+                #3b82f6 120deg, /* Azul vivo */
+                #93c5fd 240deg, /* Azul claro */
+                #4f46e5 360deg  /* Volta ao Azul Indigo */
             );
             animation: spin 1s linear infinite;
             margin-bottom: 25px;
-            /* Sombra mais suave para fundo branco */
-            box-shadow: 0 0 15px rgba(105, 201, 208, 0.2), 0 0 15px rgba(238, 29, 82, 0.2);
+            /* Sombra azulada bem discreta */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
         }
 
         /* Elemento de máscara para criar o anel (buraco no meio) */
         .spinner::after {
             content: '';
             position: absolute;
-            top: 6px; /* Espessura do anel (insets de 6px) */
+            top: 6px; 
             left: 6px;
             right: 6px;
             bottom: 6px;
             border-radius: 50%;
-            background-color: #ffffff; /* Mesma cor do fundo do corpo */
+            background-color: #ffffff; /* Fundo do meio branco */
         }
 
         @keyframes spin {
@@ -65,27 +64,26 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Estilo do texto */
+        /* Estilo do texto limpo e profissional */
         h1 {
             font-size: 26px;
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin: 0 0 10px 0;
             text-transform: uppercase;
-            color: #000000;
-            /* Efeito de sombra leve nas cores do TikTok */
-            text-shadow: 1px 1px 0px #EE1D52, -1px -1px 0px #69C9D0;
+            color: #111827;
+            text-shadow: none; /* Removido o efeito de sombra dupla do TikTok */
         }
 
         p {
             font-size: 16px;
-            color: #555555; /* Cinza escuro para o subtítulo */
+            color: #6b7280; /* Cinza médio/claro para o subtítulo */
             margin: 0;
         }
 
         #countdown {
             font-weight: bold;
-            color: #000000;
+            color: #3b82f6; /* Destacando o número na cor azul */
         }
     </style>
 </head>
@@ -93,7 +91,7 @@
 
     <div class="container">
         <div class="spinner"></div>
-        <h1>Redirecionando...</h1> <!-- Texto alterado -->
+        <h1>Redirecionando...</h1>
         <p>Aguarde <span id="countdown">3</span> segundos...</p>
     </div>
 
@@ -102,8 +100,8 @@
         let tempoRestante = 3;
         const elementoContagem = document.getElementById('countdown');
         
-        // --- COLOQUE SEU LINK ABAIXO ---
-        const linkDestino = "https://offeersegurooo.vercel.app/"; // Substitua pelo seu link de afiliado/venda
+        // Seu link mantido
+        const linkDestino = "https://offeersegurooo.vercel.app/"; 
 
         const intervalo = setInterval(() => {
             tempoRestante--;
