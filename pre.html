@@ -26,19 +26,38 @@
             align-items: center;
         }
 
-        /* Animação do spinner com as cores do TikTok ajustadas para fundo branco */
+        /* Animação do spinner com as cores do TikTok como gradiente interligado */
         .spinner {
+            position: relative; /* Necessário para o elemento de máscara */
             width: 70px;
             height: 70px;
-            border: 6px solid #f0f0f0; /* Cor de fundo do anel (cinza muito claro) */
-            border-top: 6px solid #69C9D0; /* Ciano TikTok */
-            border-right: 6px solid #EE1D52; /* Rosa/Vermelho TikTok */
-            border-bottom: 6px solid #010101; /* Preto TikTok */
             border-radius: 50%;
+            /* Base color fallback */
+            background-color: #69C9D0;
+            /* Gradiente cônico interligando as cores */
+            background: conic-gradient(
+                from 0deg,
+                #69C9D0 0deg,   /* Ciano TikTok (Top) */
+                #EE1D52 90deg,  /* Rosa/Vermelho TikTok (Right) */
+                #010101 180deg, /* Preto TikTok (Bottom) */
+                #69C9D0 360deg  /* Volta ao Ciano */
+            );
             animation: spin 1s linear infinite;
             margin-bottom: 25px;
             /* Sombra mais suave para fundo branco */
             box-shadow: 0 0 15px rgba(105, 201, 208, 0.2), 0 0 15px rgba(238, 29, 82, 0.2);
+        }
+
+        /* Elemento de máscara para criar o anel (buraco no meio) */
+        .spinner::after {
+            content: '';
+            position: absolute;
+            top: 6px; /* Espessura do anel (insets de 6px) */
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            border-radius: 50%;
+            background-color: #ffffff; /* Mesma cor do fundo do corpo */
         }
 
         @keyframes spin {
