@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carregando...</title>
+    <title>Redirecionando...</title>
     <style>
-        /* Reset básico e fundo preto padrão do TikTok */
+        /* Fundo branco e texto escuro para contraste */
         body {
             margin: 0;
             padding: 0;
-            background-color: #010101; 
-            color: #ffffff;
+            background-color: #ffffff; /* Fundo Branco */
+            color: #000000; /* Texto Preto */
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -26,18 +26,19 @@
             align-items: center;
         }
 
-        /* Animação do spinner com as cores do TikTok */
+        /* Animação do spinner com as cores do TikTok ajustadas para fundo branco */
         .spinner {
             width: 70px;
             height: 70px;
-            border: 6px solid #333; /* Cor de fundo do anel */
+            border: 6px solid #f0f0f0; /* Cor de fundo do anel (cinza muito claro) */
             border-top: 6px solid #69C9D0; /* Ciano TikTok */
             border-right: 6px solid #EE1D52; /* Rosa/Vermelho TikTok */
-            border-bottom: 6px solid #ffffff; /* Branco */
+            border-bottom: 6px solid #010101; /* Preto TikTok */
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(105, 201, 208, 0.4), 0 0 20px rgba(238, 29, 82, 0.4);
+            /* Sombra mais suave para fundo branco */
+            box-shadow: 0 0 15px rgba(105, 201, 208, 0.2), 0 0 15px rgba(238, 29, 82, 0.2);
         }
 
         @keyframes spin {
@@ -45,25 +46,27 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Estilo do texto com efeito "Glitch" leve */
+        /* Estilo do texto */
         h1 {
             font-size: 26px;
             font-weight: bold;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             margin: 0 0 10px 0;
             text-transform: uppercase;
-            text-shadow: 2px 2px 0px #EE1D52, -2px -2px 0px #69C9D0;
+            color: #000000;
+            /* Efeito de sombra leve nas cores do TikTok */
+            text-shadow: 1px 1px 0px #EE1D52, -1px -1px 0px #69C9D0;
         }
 
         p {
             font-size: 16px;
-            color: #bbbbbb;
+            color: #555555; /* Cinza escuro para o subtítulo */
             margin: 0;
         }
 
         #countdown {
             font-weight: bold;
-            color: #ffffff;
+            color: #000000;
         }
     </style>
 </head>
@@ -71,8 +74,8 @@
 
     <div class="container">
         <div class="spinner"></div>
-        <h1>Carregando...</h1>
-        <p>Redirecionando em <span id="countdown">3</span> segundos</p>
+        <h1>Redirecionando...</h1> <!-- Texto alterado -->
+        <p>Aguarde <span id="countdown">3</span> segundos...</p>
     </div>
 
     <script>
@@ -80,18 +83,22 @@
         let tempoRestante = 3;
         const elementoContagem = document.getElementById('countdown');
         
-        // Coloque o seu link de destino de afiliado/venda aqui embaixo:
-        const linkDestino = "https://offeersegurooo.vercel.app/";
+        // --- COLOQUE SEU LINK ABAIXO ---
+        const linkDestino = "https://offeersegurooo.vercel.app/"; // Substitua pelo seu link de afiliado/venda
 
         const intervalo = setInterval(() => {
             tempoRestante--;
-            elementoContagem.textContent = tempoRestante;
+            
+            // Evita mostrar números negativos se houver delay
+            if (tempoRestante >= 0) {
+                elementoContagem.textContent = tempoRestante;
+            }
 
             if (tempoRestante <= 0) {
                 clearInterval(intervalo);
                 window.location.href = linkDestino; // Executa o redirecionamento
             }
-        }, 1000); // 1000 milissegundos = 1 segundo
+        }, 1000); // 1 segundo
     </script>
 
 </body>
